@@ -1,0 +1,34 @@
+{% extends 'DragonsWealth/base.html' %}
+{% if request.user.is_authenticated %}
+
+{% block content %}
+    <h1>{{ ticker }} | {{ infoTicker.name}}</h1>
+    <h3>Цена: {{ infoTicker.price }} {{ infoTicker.currency }}</h3>
+    <div class="chart-wrapper">
+        <canvas id="myChart"></canvas>
+    </div>
+{% endblock content %}
+
+
+
+
+<script>
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let data = {
+    labels: ["10:00", "11:00", "12:00", "13:00"],
+    datasets: [
+        {
+            label: "My First dataset",
+
+            // Insert styling, colors etc here
+            borderColor: 'rgb(75, 192, 192)',
+            data: [{x: "10:00", y: 127}]
+        }
+    ]};
+
+let myChart = new Chart(ctx, {
+  type: 'line',
+  data: data,
+})
+</script>
+ {% endif %}

@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>{{title}}</title>
+	<meta name="description" content="DragonsWealth поможет вам контролировать инвестиции." />
+	<meta name="keywords" content="dragons wealth, dragons, wealth, money, tinkoff, stock, инвестиции" />
+	<meta name="author" content="Aleksandr Chugunenko"/>
+{#	<meta http-equiv="cache-control" content="no-cache">#}
+{#    <meta http-equiv="expires" content="0">#}
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="{% static 'DragonsWealth/img/main.ico' %}">
+	<link rel="icon" href="{% static 'DragonsWealth/img/main.ico' %}" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.js"></script>
+    {#<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>#}
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Morris.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.js"></script>
+	<!-- Custom CSS -->
+	<link type="text/css" href="{% static 'DragonsWealth/css/style.css' %}" rel="stylesheet" />
+
+</head>
+<body>
+{% block nav %}
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <a class="logo-brand" href="{% url 'home' %}">
+				<img src="/static/DragonsWealth/img/logo.png" alt="logo">
+                <span class="brand-text">Dragon's Wealth</span>
+			</a>
+            <div class="login">
+			{% if request.user.is_authenticated %}
+				<span> {{user.username}} | <a href="{% url 'logout' %}">Выйти</a></span>
+				{% else %}
+				<span> <a href="{% url 'login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a></span>
+				{% endif %}
+		</div>
+        </div>
+
+
+
+
+
+	</nav>
+{% endblock nav %}
+
+{#<div class="fixed-sidebar-left">#}
+{#		<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">#}
+{#			<ul class="nav navbar-nav side-nav nicescroll-bar" style="position: relative; overflow: hidden; width: auto; height: 100%;">#}
+{#				<li class="navigation-header"><span>Main</span> </li>#}
+{#				<li class="active collapsed"> dasdasd</li>#}
+{#			</ul>#}
+{#		</div>#}
+{#</div>#}
+
+<div align="center">
+{% block content %}
+<div class="page-wrapper" style="min-height: 938px;">
+    <div class="container-fluid pt-25">
+{% if request.user.is_authenticated %}
+		<h1>Портфель</h1>
+    <div class="chart-wrapper">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    {% if portfolio_Stock %}
+    <table class = "table table-hover table-dark">
+        <tr><th scope="col">Тикер</th><th scope="col">Название</th><th scope="col">Количество</th><th scope="col">Валюта</th><th scope="col">Цена</th><th scope="col">Ср.цена</th><th scope="col">Общая цена</th><th scope="col">Изменение</th><th scope="col">Изменение %</th></tr>
+        {% for row in portfolio_Stock %}
+        <tr><td><a href="ticker/{{ row.ticker }}">{{ row.ticker }}</a></td><td>{{ row.name }}</td><td>{{ row.balance }}</td><td>{{ row.currency }}</td><td>{{ row.price }}</td><td>{{ row.average_position_price }}</td><td>{{row.priceAll}}</td><td>{{row.expected_yield}}</td><td>{{row.valChange}}</td></tr>
+        {% endfor %}
+    </table>
+        {% endif %}
+
+    {% if portfolio_ETF %}
+    <table class = "table table-hover table-dark">
+        <tr><th scope="col">Тикер</th><th scope="col">Название</th><th scope="col">Количество</th><th scope="col">Валюта</th><th scope="col">Цена</th><th scope="col">Ср.цена</th><th scope="col">Общая цена</th><th scope="col">Изменение</th><th scope="col">Изменение %</th></tr>
+        {% for row in portfolio_ETF %}
+        <tr><td><a href="ticker/{{ row.ticker }}">{{ row.ticker }}</a></td><td>{{ row.name }}</td><td>{{ row.balance }}</td><td>{{ row.currency }}</td><td>{{ row.price }}</td><td>{{ row.average_position_price }}</td><td>{{row.priceAll}}</td><td>{{row.expected_yield}}</td><td>{{row.valChange}}</td></tr>
+        {% endfor %}
+    </table>
+         {% endif %}
+
+    {% if portfolio_Bond %}
+    <table class = "table table-hover table-dark">
+        <tr><th scope="col">Тикер</th><th scope="col">Название</th><th scope="col">Количество</th><th scope="col">Валюта</th><th scope="col">Цена</th><th scope="col">Ср.цена</th><th scope="col">Общая цена</th><th scope="col">Изменение</th><th scope="col">Изменение %</th></tr>
+        {% for row in portfolio_Bond %}
+        <tr><td><a href="ticker/{{ row.ticker }}">{{ row.ticker }}</a></td><td>{{ row.name }}</td><td>{{ row.balance }}</td><td>{{ row.currency }}</td><td>{{ row.price }}</td><td>{{ row.average_position_price }}</td><td>{{row.priceAll}}</td><td>{{row.expected_yield}}</td><td>{{row.valChange}}</td></tr>
+        {% endfor %}
+    </table>
+         {% endif %}
+
+        {% if portfolio_Currency %}
+    <table class = "table table-hover table-dark">
+        <tr><th scope="col">Валюта</th><th scope="col">Количество</th><th scope="col">Цена</th><th scope="col">Ср.цена</th><th scope="col">Общая цена</th><th scope="col">Изменение</th><th scope="col">Изменение %</th></tr>
+        {% if portfolio_Currency %}
+            {% for row in portfolio_Currency %}
+        <tr><td>{{row.name}}</td><td>{{row.balance}}</td><td>{{row.price}}</td><td>{{row.average_position_price}}</td><td>{{row.priceAll}}</td><td>{{row.expected_yield}}</td><td>{{row.valChange}}</td></tr>
+            {% endfor %}
+        {% endif %}
+        <tr><td>Рубль</td><td>{{portfolio_RUB}}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    </table>
+        {% endif %}
+
+        {% if operations %}
+    <table class = "table table-hover table-dark">
+        <tr><th scope="col">Комиссия ₽</th><th scope="col">Комиссия $</th><th scope="col">Маржинальная комиссия ₽</th><th scope="col">Вывод ₽</th><th scope="col">Вывод $</th><th scope="col">Дивиденды ₽</th><th scope="col">Дивиденды $</th><th scope="col">Кол-во операций</th></tr>
+        <tr><td>{{operations.commissionRUB}}</td><td>{{operations.commissionUSD}}</td><td>{{operations.marginCommission}}</td><td>{{operations.payOutRUB}}</td><td>{{operations.payOutUSD}}</td><td>{{operations.dividendRUB}}</td><td>{{operations.dividendUSD}}</td><td>{{operations.operationsVal}}</td></tr>
+    </table>
+            {% endif %}
+    </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+    {% endif %}
+{% endblock content %}
+
+
+
+</div>
+<!-- Footer -->
+	<footer>
+		<p>2021 &copy; Dragon's Wealth. Created by Chugunenko Aleksandr</p>
+	</footer>
+<!-- Конец footer'а и страницы -->
+
+
+
+{% if request.user.is_authenticated %}
+<script>
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let labels = []
+    let data = []
+    let a = ''
+    <!-- {%for val in chart%} -->
+            labels.push('{{ val }}')
+                <!-- {%endfor%} -->
+    <!-- {%for val in chart_size%} -->
+        str= '{{ val }}'
+        str = str.replace(/,/g, '.')
+            data.push(str)
+                <!-- {%endfor%} -->
+
+let colorHex = [  '#ff000a', '#EFCA08', '#9629cb', '#0028dc','#11ff00', '#ff9100', '#62fff5', '#146346', '#FF6384' ];
+let myChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    datasets: [{
+      data: data,
+      backgroundColor: colorHex
+    }],
+    labels: labels
+  },
+  options: {
+      animation: {
+          duration:	3000
+      },
+      responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+    },
+    elements: {
+          center: {
+              text: '123',
+              color: '#FF6384', // Default is #000000
+              fontStyle: 'Arial', // Default is Arial
+              {#sidePadding: 10, // Default is 20 (as a percentage)#}
+              {#minFontSize: 10, // Default is 20 (in px), set to false and text will not wrap.#}
+              {#lineHeight: 10 // D#}
+          },
+        arc: {
+            borderWidth: 0.8
+        }
+    }
+  }
+})
+</script>
+ {% endif %}
+</body>
+</html>

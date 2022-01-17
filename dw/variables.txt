@@ -1,0 +1,5 @@
+/DragonsWealth
+
+token - токен для api тинькофф
+
+client - вставка токена ai тинькофф для работы

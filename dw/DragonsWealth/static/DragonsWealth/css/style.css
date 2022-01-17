@@ -1,0 +1,61 @@
+@charset "UTF-8";
+/****************************/
+/** Imports **/
+/****************************/
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700|Poppins:500);
+
+/** Basic **/
+/****************************/
+
+body{
+    background: #000000;
+    color: #ffffff;
+}
+
+a{
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover{
+    color: #878787;
+}
+
+nav{
+    /*font-family: Poppins, sans-serif;*/
+    /*font-size: 21px;*/
+    /*visibility: visible;*/
+    /*opacity: 1;*/
+    background: #212121;
+    color: #878787;
+}
+
+.brand-text {
+    color: #ffffff;
+    font-size: 30px;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    padding: 4px;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    margin: 1px;
+}
+
+
+
+.chart-wrapper {
+    width: 400px;
+    height: 400px;
+    margin: 0px 0px;
+}
+
+footer{
+    color: rgb(135, 135, 135);
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+}
+
+.table{
+    border-radius: 10px;
+}
